@@ -1,0 +1,133 @@
+/* Estilo básico */
+body {
+    font-family: 'Orbitron', sans-serif; /* Estilo futurista */
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle, #000000, #1b1b1b);
+    color: #fdfdfd; /* Branco brilhante */
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #ff00ff, 0 0 15px #ff0000;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Layout de duas colunas */
+.content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Coluna esquerda: Formulários */
+.left-column {
+    flex: 1;
+    background: linear-gradient(135deg, #2c2c2c, #3a3a3a);
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
+    border: 2px solid #00ffff;
+}
+
+/* Coluna direita: Console */
+.right-column {
+    flex: 2;
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #ff00ff;
+    box-shadow: 0 0 20px #00ffff, 0 0 30px #ff00ff;
+    overflow: auto;
+    height: 93vh;
+}
+
+/* Estilo do log */
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #00ffff;
+    background-color: #0f0f0f;
+    padding: 10px;
+    border-radius: 5px;
+    height: 88%;
+    overflow: auto;
+    text-shadow: 0 0 5px #ff00ff, 0 0 10px #00ffff;
+}
+
+/* Botões e selects */
+button {
+    padding: 12px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #ff0099, #00ffff);
+    color: #000000;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff00ff, 0 0 15px #00ffff;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:disabled {
+    background-color: #333;
+    color: #555;
+    cursor: not-allowed;
+}
+
+button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff00ff, 0 0 25px #00ffff;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #00ffff;
+    background-color: #111;
+    color: #ff00ff;
+    box-shadow: 0 0 10px #ff00ff, 0 0 15px #00ffff;
+}
+
+/* Botão para limpar o console */
+#clearLogBtn {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #ff3333, #ff0000);
+    color: #fdfdfd;
+    border: 2px solid #ff00ff;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+}
+
+#clearLogBtn:hover {
+    background: linear-gradient(135deg, #ff0000, #990000);
+    box-shadow: 0 0 25px #ff00ff, 0 0 30px #00ffff;
+}
+
+/* Estilo para os checkboxes */
+label {
+    display: block;
+    margin: 10px 0;
+    font-size: 16px;
+    color: #00ffff;
+    text-shadow: 0 0 5px #ff00ff;
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+    accent-color: #ff00ff;
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Dispositivos Frida</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <!-- Coluna esquerda: Formulários -->
+            <div class="left-column">
+                <h3 id="gerenciador-title">Gerenciador Frida</h3>
+
+                <button id="listarDispositivosBtn">Listar Dispositivos</button>
+                <select id="dispositivos">
+                    <option value="">Selecionar dispositivo</option>
+                </select>
+            
+                <h3>Opções de Execução</h3>
+                <label>
+                    <input type="radio" name="forma" value="-f" checked> Iniciar e anexar (-f)
+                </label>
+                <label>
+                    <input type="radio" name="forma" value="-n"> Anexar ao processo pelo nome (-n)
+                </label>
+            
+                <button id="listarPacotesBtn" disabled>Listar Pacotes</button>
+                <select id="pacotes">
+                    <option value="">Selecionar pacote</option>
+                </select>
+            
+                <button id="listarScriptsBtn" disabled>Listar Scripts</button>
+                <select id="scripts">
+                    <option value="">Selecionar script</option>
+                </select>
+                <button id="adicionarScriptBtn" disabled>Adicionar Script</button>
+            
+                <h3>Scripts Selecionados</h3>
+                <ul id="scriptsSelecionados" class="scripts-list"></ul>
+
+            
+                <button id="executarBtn" disabled>Executar</button>
+                <button id="clearLogBtn"><i class="fas fa-trash"></i> Limpar Console</button>
+            </div>
+
+            <!-- Coluna direita: Log/Terminal -->
+            <div class="right-column">
+                <h3>Console</h3>
+                <pre id="log"></pre>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+/* Estilo básico */
+body {
+    font-family: 'Consolas', 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(43, 43, 43);
+    color: white;
+    font-family: 'Roboto', sans-serif; /* Substitua 'Roboto' pela fonte escolhida */
+    
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Layout de duas colunas */
+.content {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    gap: 20px;
+}
+
+/* Coluna esquerda: Formulários */
+.left-column {
+    flex: 1;
+    background-color: rgb(50, 51, 52);
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    /* border: 1px solid #00ff00; */
+}
+
+/* Coluna direita: Console */
+.right-column {
+    flex: 2;
+    background-color: rgb(50, 51, 52);
+    padding: 15px;
+    border-radius: 8px;
+    /* border: 1px solid #00ff00; */
+    overflow: auto;
+    height: 93vh;
+}
+
+/* Estilo do log */
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+    color: rgb(165, 195, 91);
+    background-color: rgb(43, 43, 43);
+    padding: 10px;
+    border-radius: 5px;
+    height: 88%;
+    overflow: auto;
+}
+
+/* Botões e selects */
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: rgb(216, 102, 51);
+    color: white;
+    border: 1px solid rgb(43, 43, 43);;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+button:disabled {
+    background-color: #333;
+    color: white;
+    cursor: not-allowed;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background-color: rgb(216, 102, 51);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* Aumenta a sombra */
+    transform: translateY(-2px); /* Leve movimento para cima */
+}
+
+/* Efeito ao focar */
+button:focus {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
+    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
+}
+
+select {
+    padding: 10px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho da fonte */
+    border-radius: 5px; /* Bordas arredondadas */
+    background-color: rgb(43, 43, 43); /* Cor de fundo */
+    color: white; /* Cor do texto */
+    outline: none; /* Remove o contorno padrão ao focar */
+    border: none; /* Remove qualquer borda padrão */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
+    transition: all 0.3s ease; /* Transição suave para interações */
+    cursor: pointer; /* Mostra o cursor de interação */
+}
+
+/* Efeito ao passar o mouse */
+select:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* Aumenta a sombra */
+    transform: translateY(-2px); /* Leve movimento para cima */
+}
+
+/* Efeito ao focar */
+select:focus {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
+    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
+}
+
+
+/* Botão para limpar o console */
+#clearLogBtn {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    background-color: rgb(38, 100, 157);
+    color: white;
+    /* border: 1px solid #00ff00; */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+#clearLogBtn:hover {
+    background-color: rgb(38, 100, 157);
+}
+
+/* Estilo para os checkboxes */
+label {
+    display: block;
+    /* margin: 10px 0; */
+    font-size: 16px;
+    /* color: #00ff00; */
+}
+
+input[type="radio"] {
+    margin-right: 5px;
+    /* accent-color: #00ff00; */
+}
+
+/* Estilização da lista de scripts selecionados */
+.scripts-list {
+    list-style: none; /* Remove os marcadores padrão */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Coloca os itens em coluna */
+    gap: 10px; /* Espaço entre os itens */
+}
+
+.scripts-list li {
+    display: flex;
+    justify-content: space-between; /* Espaço entre o texto e o botão */
+    align-items: center; /* Alinha verticalmente os itens */
+    background-color: #222; /* Fundo escuro para destacar */
+    padding: 10px 15px;
+    border-radius: 8px; /* Borda arredondada */
+    color: white;
+    font-family: 'Courier New', Courier, monospace; /* Fonte estilizada */
+    font-size: 14px;
+    /* border: 1px solid #0f0; */
+}
+
+.scripts-list li:focus {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
+    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
+}
+
+.scripts-list button {
+    background-color: #ff5555; /* Botão vermelho */
+    border: none;
+    padding: 5px 10px;
+    color: white;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transição suave */
+}
+
+.scripts-list button:hover {
+    background-color: #ff3333; /* Tom mais claro ao passar o mouse */
+}
