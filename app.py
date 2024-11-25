@@ -6,8 +6,14 @@ import frida
 
 # Caminho dos scripts
 SCRIPT_PATH = fr"C:\Users\{os.getlogin()}\Downloads\frida-universal\static\js\scripts"
+
 app = Flask(__name__)
 socketio = SocketIO(app)
+
+# Função para enviar logs
+def enviar_log(mensagem):
+    emit('log', mensagem, broadcast=True)
+    print(f"[LOG] {mensagem}")  # Adicionar log ao console do servidor
 
 # Rota principal para renderizar a página
 @app.route('/')
@@ -47,10 +53,7 @@ def listar_pacotes():
         for linha in linhas[3:]:
             partes = linha.split()
             if len(partes) >= 3:
-                if forma == '-f':
-                    pacotes.append(partes[-1])  # Pegar o nome do pacote (coluna 3)
-                elif forma == '-n':
-                    pacotes.append(partes[1])  # Pegar o nome do app (coluna 2)
+                pacotes.append(partes[-1] if forma == '-f' else partes[1])
         return jsonify(pacotes)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -75,8 +78,8 @@ def executar_comando(data):
     scripts = data.get('scripts', [])  # Lista de scripts selecionados
     forma = data.get('forma', '-f')  # Padrão é -f caso não seja enviado
 
-    if not dispositivo_id or not pacote or not scripts or not forma:
-        emit('log', 'Erro: Dados insuficientes fornecidos.', broadcast=True)
+    if not dispositivo_id or not scripts or not forma:
+        enviar_log('Erro: Dados insuficientes fornecidos.')
         return
 
     # Validar os scripts
@@ -84,7 +87,7 @@ def executar_comando(data):
     for script in scripts:
         script_path = os.path.join(SCRIPT_PATH, script)
         if not os.path.exists(script_path):
-            emit('log', f'Erro: Script não encontrado em {script_path}', broadcast=True)
+            enviar_log(f'Erro: Script não encontrado em {script_path}')
             return
         script_flags.append(f'-l "{script_path}"')
 
@@ -95,24 +98,34 @@ def executar_comando(data):
             comando = f'frida -D "{dispositivo_id}" -f "{pacote}" {script_flags_str}'
         elif forma == '-n':  # Apenas anexa ao processo pelo nome
             comando = f'frida -D "{dispositivo_id}" -n "{pacote}" {script_flags_str}'
+        elif forma == '-F':  # Apenas anexa ao processo já iniciado 
+            comando = f'frida -D "{dispositivo_id}" -F {script_flags_str}'
         else:
-            emit('log', 'Erro: Forma de execução inválida.', broadcast=True)
+            enviar_log('Erro: Forma de execução inválida.')
             return
 
-        emit('log', f'Executando comando: {comando}', broadcast=True)
+        enviar_log(f'Executando comando: {comando}')
 
         # Executar o comando
         process = subprocess.Popen(
             comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
         )
+
         for line in iter(process.stdout.readline, ''):
-            if line:
-                emit('log', line.strip(), broadcast=True)  # Enviar logs em tempo real
+            if line.strip():
+                enviar_log(line.strip())  # Enviar logs em tempo real
         process.stdout.close()
         process.wait()
-        emit('log', 'Comando finalizado.', broadcast=True)
+
+        # Capturar possíveis erros do stderr
+        stderr_output = process.stderr.read()
+        if stderr_output:
+            enviar_log(f"Erro no comando: {stderr_output.strip()}")
+        else:
+            enviar_log('Comando finalizado com sucesso.')
+
     except Exception as e:
-        emit('log', f'Erro ao executar comando: {str(e)}', broadcast=True)
+        enviar_log(f'Erro ao executar comando: {str(e)}')
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, host="0.0.0.0")

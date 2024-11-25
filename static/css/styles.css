@@ -36,7 +36,6 @@ body {
     flex-direction: column;
     gap: 10px;
     max-width: 400px;
-    /* border: 1px solid #00ff00; */
 }
 
 /* Coluna direita: Console */
@@ -45,7 +44,6 @@ body {
     background-color: rgb(50, 51, 52);
     padding: 15px;
     border-radius: 8px;
-    /* border: 1px solid #00ff00; */
     overflow: auto;
     height: 93vh;
 }
@@ -128,7 +126,6 @@ select:focus {
     font-size: 16px;
     background-color: rgb(38, 100, 157);
     color: white;
-    /* border: 1px solid #00ff00; */
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s, background-color 0.2s;
@@ -141,14 +138,11 @@ select:focus {
 /* Estilo para os checkboxes */
 label {
     display: block;
-    /* margin: 10px 0; */
     font-size: 16px;
-    /* color: #00ff00; */
 }
 
 input[type="radio"] {
     margin-right: 5px;
-    /* accent-color: #00ff00; */
 }
 
 /* Estilização da lista de scripts selecionados */
@@ -171,7 +165,6 @@ input[type="radio"] {
     color: white;
     font-family: 'Courier New', Courier, monospace; /* Fonte estilizada */
     font-size: 14px;
-    /* border: 1px solid #0f0; */
 }
 
 .scripts-list li:focus {
