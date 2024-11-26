@@ -24,7 +24,7 @@
                 <h2>Opções de Execução</h2>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" name="forma" value="-f" checked> Iniciar e anexar (-f, --spawn)
+                        <input type="radio" name="forma" value="-f"> Iniciar processo e anexar (-f, --spawn)
                     </label>
                     <label>
                         <input type="radio" name="forma" value="-F"> Anexar ao processo iniciado (-F, --frontmost)
@@ -48,18 +48,23 @@
                 <button id="adicionarScriptBtn" disabled>Adicionar Script</button>
 
                 <h2>Scripts Selecionados</h2>
-                <ul id="scriptsSelecionados" class="scripts-list"></ul>
+                <div class="container-script">
+                    
+                    <ul id="scriptsSelecionados" class="scripts-list"></ul>
+                </div>
 
                 <div class="action-buttons">
                     <button id="executarBtn" disabled>Executar</button>
-                    <button id="clearLogBtn"><i class="fas fa-trash"></i> Limpar Console</button>
                 </div>
             </section>
 
             <!-- Coluna direita: Log/Terminal -->
             <section class="right-column">
-                <h2>Console</h2>
+
                 <pre id="log"></pre>
+                <button id="clearLogBtn"><i class="fas fa-trash"></i> Limpar Console</button>
+                <button id="saveLogBtn"><i class="fas fa-trash"></i> Salvar Console</button>
+                <button id="refreshBtn"><i class="fas fa-trash"></i> Refresh</button>
             </section>
         </main>
     </div>
