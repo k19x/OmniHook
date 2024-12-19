@@ -82,34 +82,44 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para listar pacotes
     function listarPacotes() {
         const dispositivoId = dispositivosSelect.value;
+        const forma = getSelectedForma(); // Captura a forma selecionada
+    
         if (!dispositivoId) {
             appendLog('Selecione um dispositivo para listar os pacotes.');
             return;
         }
-
+    
+        if (forma === '-F') {
+            appendLog('Anexar ao processo iniciado (-F) não requer seleção de pacotes.');
+            pacotesSelect.disabled = true; // Desabilita o dropdown de pacotes
+            pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
+            verificarEstado(); // Atualiza o estado dos botões
+            return;
+        }
+    
         appendLog('Listando pacotes...');
         fetch('/listar_pacotes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ dispositivo_id: dispositivoId })
+            body: JSON.stringify({ dispositivo_id: dispositivoId, forma: forma })
         })
-            .then(response => response.json())
-            .then(data => {
-                pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
-                if (data.error) {
-                    appendLog(data.error);
-                    return;
-                }
-                data.forEach(pacote => {
-                    const option = document.createElement('option');
-                    option.value = pacote;
-                    option.textContent = pacote;
-                    pacotesSelect.appendChild(option);
-                });
-                appendLog('Pacotes carregados com sucesso!');
-                verificarEstado(); // Atualiza o estado após carregar pacotes
-            })
-            .catch(error => appendLog(`Erro ao listar pacotes: ${error}`));
+        .then(response => response.json())
+        .then(data => {
+            pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
+            if (data.error) {
+                appendLog(data.error);
+                return;
+            }
+            data.forEach(pacote => {
+                const option = document.createElement('option');
+                option.value = pacote;
+                option.textContent = pacote;
+                pacotesSelect.appendChild(option);
+            });
+            appendLog('Pacotes carregados com sucesso!');
+            verificarEstado(); // Atualiza o estado dos botões
+        })
+        .catch(error => appendLog(`Erro ao listar pacotes: ${error}`));
     }
 
     // Função para listar scripts

@@ -30,6 +30,7 @@ body {
 .left-column {
     flex: 1;
     background-color: rgb(50, 51, 52);
+    border: 1px outset rgb(43, 43, 43);
     padding: 20px;
     border-radius: 8px;
     display: flex;
@@ -42,6 +43,7 @@ body {
 .right-column {
     flex: 2;
     background-color: rgb(50, 51, 52);
+    border: 1px outset rgb(43, 43, 43);
     padding: 15px;
     border-radius: 8px;
     overflow: auto;
@@ -58,7 +60,8 @@ pre {
     background-color: rgb(43, 43, 43);
     padding: 10px;
     border-radius: 5px;
-    height: 85vh;
+    border: inset rgb(43, 43, 43) 1.1px;
+    height: 82vh;
     overflow: auto;
 }
 
@@ -68,7 +71,7 @@ button {
     font-size: 16px;
     background-color: rgb(216, 102, 51);
     color: white;
-    border: 1px solid rgb(43, 43, 43);;
+    border: 1px inset rgb(43, 43, 43);
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s, background-color 0.2s;
@@ -101,6 +104,7 @@ select {
     color: white; /* Cor do texto */
     outline: none; /* Remove o contorno padrão ao focar */
     border: none; /* Remove qualquer borda padrão */
+    border: 1px inset rgb(43, 43, 43);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
     transition: all 0.3s ease; /* Transição suave para interações */
     cursor: pointer; /* Mostra o cursor de interação */

@@ -5,7 +5,7 @@ import os
 import frida
 
 # Caminho dos scripts
-SCRIPT_PATH = fr"C:\Users\{os.getlogin()}\Downloads\frida-universal\static\js\scripts"
+SCRIPT_PATH = fr"C:\Users\{os.getlogin()}\Downloads\OmniHook-main\static\js\scripts"
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -42,7 +42,13 @@ def listar_pacotes():
         return jsonify({'error': 'ID do dispositivo não fornecido'}), 400
 
     try:
-        comando = f'frida-ps -D {dispositivo_id} -ai'
+        if forma == '-f':  # Listar pacotes pelo identificador completo
+            comando = f'frida-ps -D {dispositivo_id} -ai'
+        elif forma == '-n':  # Listar pacotes pelo nome
+            comando = f'frida-ps -D {dispositivo_id} -ai'  # Sem identificador completo
+        else:  # Caso seja -F, bloqueie a listagem de pacotes
+            return jsonify([])  # Retorna lista vazia para desativar a seleção de pacotes
+
         result = subprocess.run(comando, shell=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         if result.stderr:
@@ -53,7 +59,10 @@ def listar_pacotes():
         for linha in linhas[3:]:
             partes = linha.split()
             if len(partes) >= 3:
-                pacotes.append(partes[-1] if forma == '-f' else partes[1])
+                if forma == '-f':
+                    pacotes.append(partes[-1])  # Retorna identificador completo (e.g., com.app.package)
+                elif forma == '-n':
+                    pacotes.append(partes[1])  # Retorna nome do processo (e.g., Chrome, Google)
         return jsonify(pacotes)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
