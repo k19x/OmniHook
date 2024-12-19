@@ -70,7 +70,7 @@ pre {
 button {
     padding: 10px;
     font-size: 16px;
-    background-color: rgb(118, 184, 63);
+    background-color: rgb(23, 206, 30);
     color: white;
     border: 1px inset rgb(43, 43, 43);
     border-radius: 5px;
@@ -86,7 +86,7 @@ button:disabled {
 
 button:hover {
     transform: scale(1.05);
-    background-color: rgb(23, 206, 30);
+    background-color: rgb(118, 184, 63);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* Aumenta a sombra */
     transform: translateY(-2px); /* Leve movimento para cima */
 }
