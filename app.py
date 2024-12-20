@@ -5,7 +5,8 @@ import os
 import frida
 
 # Caminho dos scripts
-SCRIPT_PATH = fr"C:\Users\{os.getlogin()}\Downloads\OmniHook-main\static\js\scripts"
+current_directory = os.path.dirname(os.path.abspath(__file__))
+SCRIPT_PATH = os.path.join(current_directory, "static", "js", "scripts")
 
 app = Flask(__name__)
 socketio = SocketIO(app)

@@ -1,12 +1,11 @@
 /* Estilo básico */
 body {
-    font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas';
+    font-size: 14px;
     margin: 0;
     padding: 0;
     background-color: rgb(43, 43, 43);
-    color: rgb(23, 206, 30);
-    font-family: 'Roboto', sans-serif; /* Substitua 'Roboto' pela fonte escolhida */
-    
+    color: rgb(23, 206, 30);    
 }
 
 .container {
@@ -31,7 +30,7 @@ body {
 .left-column {
     flex: 1;
     background-color: rgb(25, 31, 43);
-    border: 1px outset rgb(43, 43, 43);
+    border: 1px outset rgb(23, 206, 30);
     padding: 20px;
     border-radius: 8px;
     display: flex;
@@ -44,7 +43,7 @@ body {
 .right-column {
     flex: 2;
     background-color: rgb(25, 31, 43);
-    border: 1px outset rgb(43, 43, 43);
+    border: 0.1px outset rgb(23, 206, 30);
     padding: 15px;
     border-radius: 8px;
     overflow: auto;
@@ -61,7 +60,7 @@ pre {
     background-color: rgb(10, 14, 23);
     padding: 10px;
     border-radius: 5px;
-    border: inset rgb(43, 43, 43) 1.1px;
+    border: inset rgb(23, 206, 30) 1.1px;
     height: 82vh;
     overflow: auto;
 }
@@ -72,7 +71,7 @@ button {
     font-size: 16px;
     background-color: rgb(118, 184, 63);
     color: white;
-    border: 1px inset rgb(43, 43, 43);
+    border: 1px inset rgb(23, 206, 30);
     border-radius: 5px;
     cursor: pointer;
     transition: transform 0.2s, background-color 0.2s;
