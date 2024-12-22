@@ -37,24 +37,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Função para verificar o estado dos pacotes e scripts
     function verificarEstado() {
-        const forma = getSelectedForma();
+        const forma = getSelectedForma(); // Captura a forma selecionada
+        const dispositivoSelecionado = !!dispositivosSelect.value; // Verifica se um dispositivo foi selecionado
 
         if (forma === '-F') {
-            // Ativa apenas "Listar Scripts" e "Adicionar Script"
-            listarPacotesBtn.disabled = true;
-            pacotesSelect.disabled = true;
-            pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
-            listarScriptsBtn.disabled = false;
-            adicionarScriptBtn.disabled = false;
+            // Configurações específicas para a opção -F
+            listarPacotesBtn.disabled = true; // Desabilita "Listar Pacotes"
+            pacotesSelect.disabled = true;   // Desabilita o dropdown de pacotes
+            listarScriptsBtn.disabled = !dispositivoSelecionado; // Habilita "Listar Scripts" se houver dispositivo
+            adicionarScriptBtn.disabled = true; // Bloqueia até listar scripts
+            executarBtn.disabled = selectedScripts.length === 0 || !dispositivoSelecionado; // Habilita "Executar" se scripts e dispositivo estiverem selecionados
         } else {
-            // Ativa "Listar Pacotes" e controla o estado de outros botões
-            listarPacotesBtn.disabled = !dispositivosSelect.value;
-            pacotesSelect.disabled = !dispositivosSelect.value;
-            listarScriptsBtn.disabled = !pacotesSelect.value;
-            adicionarScriptBtn.disabled = true; // Adicionar script desabilitado até listar scripts
+            // Configurações para outras opções (-f ou -n)
+            listarPacotesBtn.disabled = !dispositivoSelecionado;
+            pacotesSelect.disabled = !dispositivoSelecionado;
+            listarScriptsBtn.disabled = !pacotesSelect.value || !dispositivoSelecionado;
+            adicionarScriptBtn.disabled = true; // Bloqueia até listar scripts
+            executarBtn.disabled = !pacotesSelect.value || selectedScripts.length === 0 || !dispositivoSelecionado;
         }
-        verificarExecutarBtn(); // Atualiza o estado do botão "Executar"
     }
+
 
     // Função para listar dispositivos
     function listarDispositivos() {
@@ -82,45 +84,46 @@ document.addEventListener('DOMContentLoaded', () => {
     // Função para listar pacotes
     function listarPacotes() {
         const dispositivoId = dispositivosSelect.value;
-        const forma = getSelectedForma(); // Captura a forma selecionada
-    
+        const forma = getSelectedForma();
+
         if (!dispositivoId) {
             appendLog('Selecione um dispositivo para listar os pacotes.');
             return;
         }
-    
+
         if (forma === '-F') {
-            appendLog('Anexar ao processo iniciado (-F) não requer seleção de pacotes.');
-            pacotesSelect.disabled = true; // Desabilita o dropdown de pacotes
-            pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
-            verificarEstado(); // Atualiza o estado dos botões
+            appendLog('Modo -F selecionado: Não é necessário listar pacotes. Você pode listar os scripts diretamente.');
+            listarPacotesBtn.disabled = true;
+            pacotesSelect.disabled = true;
+            listarScriptsBtn.disabled = false; // Libera o botão "Listar Scripts"
             return;
         }
-    
+
         appendLog('Listando pacotes...');
         fetch('/listar_pacotes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ dispositivo_id: dispositivoId, forma: forma })
         })
-        .then(response => response.json())
-        .then(data => {
-            pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
-            if (data.error) {
-                appendLog(data.error);
-                return;
-            }
-            data.forEach(pacote => {
-                const option = document.createElement('option');
-                option.value = pacote;
-                option.textContent = pacote;
-                pacotesSelect.appendChild(option);
-            });
-            appendLog('Pacotes carregados com sucesso!');
-            verificarEstado(); // Atualiza o estado dos botões
-        })
-        .catch(error => appendLog(`Erro ao listar pacotes: ${error}`));
+            .then(response => response.json())
+            .then(data => {
+                pacotesSelect.innerHTML = '<option value="">Selecionar pacote</option>';
+                if (data.error) {
+                    appendLog(data.error);
+                    return;
+                }
+                data.forEach(pacote => {
+                    const option = document.createElement('option');
+                    option.value = pacote;
+                    option.textContent = pacote;
+                    pacotesSelect.appendChild(option);
+                });
+                appendLog('Pacotes carregados com sucesso!');
+                verificarEstado();
+            })
+            .catch(error => appendLog(`Erro ao listar pacotes: ${error}`));
     }
+
 
     // Função para listar scripts
     function listarScripts() {
@@ -216,31 +219,31 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('executar_comando', comandoLog);
     }
 
-         // salvar logs
-         function salvarLogs() {
-            const logContent = log.textContent;
-            if (!logContent) {
-                appendLog('Nenhum log disponível para salvar.');
-                return;
-            }
-        
-            const blob = new Blob([logContent], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'console_logs.txt';
-            link.click();
-            URL.revokeObjectURL(link.href);
-        
-            appendLog('Logs salvos como console_logs.txt.');
+    // salvar logs
+    function salvarLogs() {
+        const logContent = log.textContent;
+        if (!logContent) {
+            appendLog('Nenhum log disponível para salvar.');
+            return;
         }
-    
-        // refresh
-        function refreshPagina() {
-            appendLog('Atualizando a página...');
-            location.reload();
-        }
-    
-    
+
+        const blob = new Blob([logContent], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'console_logs.txt';
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        appendLog('Logs salvos como console_logs.txt.');
+    }
+
+    // refresh
+    function refreshPagina() {
+        appendLog('Atualizando a página...');
+        location.reload();
+    }
+
+
 
     // Configurar eventos
     listarDispositivosBtn.addEventListener('click', listarDispositivos);

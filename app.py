@@ -46,7 +46,7 @@ def listar_pacotes():
         if forma == '-f':  # Listar pacotes pelo identificador completo
             comando = f'frida-ps -D {dispositivo_id} -ai'
         elif forma == '-n':  # Listar pacotes pelo nome
-            comando = f'frida-ps -D {dispositivo_id} -ai'  # Sem identificador completo
+            comando = f'frida-ps -D {dispositivo_id} -a'  # Sem identificador completo
         else:  # Caso seja -F, bloqueie a listagem de pacotes
             return jsonify([])  # Retorna lista vazia para desativar a seleção de pacotes
 

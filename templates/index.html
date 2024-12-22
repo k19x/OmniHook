@@ -17,7 +17,7 @@
             <section class="left-column">
 
 
-                <button id="listarDispositivosBtn">Listar Dispositivos</button>
+                <button id="listarDispositivosBtn" title="Clique para listar os dispositivos">Listar Dispositivos</button>
                 <select id="dispositivos">
                     <option value="">Selecionar dispositivo</option>
                 </select>
@@ -25,28 +25,28 @@
                 <h2>Opções de Execução</h2>
                 <div class="radio-group">
                     <label>
-                        <input type="radio" name="forma" value="-f">Processar e anexar (-f, --spawn)
+                        <input type="radio" name="forma" value="-f">(-f, --spawn)
                     </label>
                     <label>
-                        <input type="radio" name="forma" value="-F">Processar já iniciado (-F, --frontmost)
+                        <input type="radio" name="forma" value="-F">(-F, --frontmost)
                     </label>
                     <label>
-                        <input type="radio" name="forma" value="-n">Processar pelo nome (-n)
+                        <input type="radio" name="forma" value="-n">(-n)
                     </label>
                 </div>
 
                 <h2>Gerenciador de Pacotes</h2>
-                <button id="listarPacotesBtn" disabled>Listar Pacotes</button>
+                <button id="listarPacotesBtn" title="Clique para listar os pacotes instalados" disabled>Listar Pacotes</button>
                 <select id="pacotes">
                     <option value="">Selecionar pacote</option>
                 </select>
 
                 <h2>Gerenciador de Scripts</h2>
-                <button id="listarScriptsBtn" disabled>Listar Scripts</button>
+                <button id="listarScriptsBtn" title="Clique para listar scripts" disabled>Listar Scripts</button>
                 <select id="scripts">
                     <option value="">Selecionar script</option>
                 </select>
-                <button id="adicionarScriptBtn" disabled>Adicionar Script</button>
+                <button id="adicionarScriptBtn" title="Adicionar scripts" disabled>Adicionar Script</button>
 
                 <h2>Scripts Selecionados</h2>
                 <div class="container-script">
@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button id="executarBtn" disabled>Executar</button>
+                    <button id="executarBtn" title="Executar Frida" disabled>Executar</button>
                 </div>
             </section>
 
@@ -70,6 +70,7 @@
         </main>
     </div>
 
-    <script src="/static/js/script.js"></script>
+    <script src="/static/js/script.js" defer></script>
+
 </body>
 </html>
