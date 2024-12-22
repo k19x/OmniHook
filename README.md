@@ -3,7 +3,7 @@ facilitar o trabalho de segurança e desenvolvimento.
 
 python -m venv OmniHook
 
-&  C:\Users\<UserLocal>\OmniHook\Scripts\Activate.ps1
+&  C:\Users\YourUser\OmniHook\Scripts\Activate.ps1
 
 Done!
 
