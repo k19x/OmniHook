@@ -4,73 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OmniHook Fr1da</title>
+
     <link rel="stylesheet" href="/static/css/styles.css">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron&family=Ubuntu&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
         <main class="content">
-            <!-- Coluna esquerda: Formulários -->
             <section class="left-column">
+                <button id="listarDispositivosBtn"><i class="fas fa-plug"></i> Listar Dispositivos</button>
+                <select id="dispositivos"><option value="">Selecionar dispositivo</option></select>
 
-
-                <button id="listarDispositivosBtn" title="Clique para listar os dispositivos">Listar Dispositivos</button>
-                <select id="dispositivos">
-                    <option value="">Selecionar dispositivo</option>
-                </select>
+                <button id="ativarTcpipBtn"><i class="fas fa-wifi"></i> Ativar TCP/IP</button>
 
                 <h2>Opções de Execução</h2>
                 <div class="radio-group">
-                    <label>
-                        <input type="radio" name="forma" value="-f">(-f, --spawn)
-                    </label>
-                    <label>
-                        <input type="radio" name="forma" value="-F">(-F, --frontmost)
-                    </label>
-                    <label>
-                        <input type="radio" name="forma" value="-n">(-n)
-                    </label>
+                    <label><input type="radio" name="forma" value="-f"> (-f, --spawn)</label>
+                    <label><input type="radio" name="forma" value="-F"> (-F, --frontmost)</label>
+                    <label><input type="radio" name="forma" value="-n"> (-n)</label>
                 </div>
 
                 <h2>Gerenciador de Pacotes</h2>
-                <button id="listarPacotesBtn" title="Clique para listar os pacotes instalados" disabled>Listar Pacotes</button>
-                <select id="pacotes">
-                    <option value="">Selecionar pacote</option>
-                </select>
+                <button id="listarPacotesBtn" disabled><i class="fas fa-box"></i> Listar Pacotes</button>
+                <select id="pacotes"><option value="">Selecionar pacote</option></select>
 
                 <h2>Gerenciador de Scripts</h2>
-                <button id="listarScriptsBtn" title="Clique para listar scripts" disabled>Listar Scripts</button>
-                <select id="scripts">
-                    <option value="">Selecionar script</option>
-                </select>
-                <button id="adicionarScriptBtn" title="Adicionar scripts" disabled>Adicionar Script</button>
+                <button id="listarScriptsBtn" disabled><i class="fas fa-code"></i> Listar Scripts</button>
+                <select id="scripts"><option value="">Selecionar script</option></select>
+                <button id="adicionarScriptBtn" disabled><i class="fas fa-plus"></i> Adicionar Script</button>
 
                 <h2>Scripts Selecionados</h2>
                 <div class="container-script">
-                    
                     <ul id="scriptsSelecionados" class="scripts-list"></ul>
                 </div>
 
-                <div class="action-buttons">
-                    <button id="executarBtn" title="Executar Frida" disabled>Executar</button>
-                </div>
+                <button id="executarBtn" disabled><i class="fas fa-play"></i> Executar</button>
             </section>
 
-            <!-- Coluna direita: Log/Terminal -->
             <section class="right-column">
-
                 <pre id="log"></pre>
                 <button id="clearLogBtn"><i class="fas fa-trash"></i> Limpar Console</button>
-                <button id="saveLogBtn"><i class="fas fa-trash"></i> Salvar Console</button>
-                <button id="refreshBtn"><i class="fas fa-trash"></i> Refresh</button>
+                <button id="saveLogBtn"><i class="fas fa-save"></i> Salvar Console</button>
+                <button id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
             </section>
         </main>
     </div>
 
     <script src="/static/js/script.js" defer></script>
-
 </body>
 </html>

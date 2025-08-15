@@ -1,17 +1,14 @@
-/* Estilo básico */
+/* === Estilo Global === */
 body {
-    font-family: 'Consolas';
+    font-family: 'Consolas', monospace;
     font-size: 14px;
     margin: 0;
     padding: 0;
     background-color: rgb(43, 43, 43);
     color: rgb(23, 206, 30);
-    
-    /* Adicionando imagem de fundo */
-    /* background-image: url('https://c.wallhere.com/photos/71/30/DEDSEC_Watch_Dogs_hacking_Democracy_Hello_World_Watch_Dogs_2-1349429.jpg!d'); */
-    background-size: cover; /* Ajusta para cobrir a tela */
-    background-repeat: no-repeat; /* Evita repetição */
-    background-position: center; /* Centraliza a imagem */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .container {
@@ -19,206 +16,179 @@ body {
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
-    height: 100vh;
+    min-height: 100vh;
     box-sizing: border-box;
-    /* background-color: rgb(10, 14, 23); */
 }
 
-/* Layout de duas colunas */
+/* === Layout Principal === */
 .content {
     display: flex;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     gap: 20px;
 }
 
+/* === Coluna Esquerda === */
 .left-column {
-    flex: 1; /* Largura proporcional menor */
-    max-width: 300px; /* Define um limite máximo de largura */
+    flex: 1;
+    max-width: 320px;
     background-color: rgb(25, 31, 43);
     padding: 20px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
 }
 
+/* === Coluna Direita === */
 .right-column {
-    flex: 3; /* Largura proporcional maior */
+    flex: 3;
     background-color: rgb(25, 31, 43);
     padding: 15px;
     border-radius: 8px;
-    overflow: auto; /* Garante rolagem, se necessário */
-    height: 93vh; /* Ajusta a altura */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 93vh;
+    box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
 }
 
-
-/* Estilo do log */
+/* === Log === */
 pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-family: 'Consolas', monospace;
     font-size: 14px;
     color: rgb(23, 206, 30);
-    background-color: rgba(10, 14, 23, 0.6);
+    background-color: rgba(10, 14, 23, 0.85);
     padding: 10px;
     border-radius: 5px;
-    /* border: inset rgb(23, 206, 30) 1.1px; */
     height: 82vh;
     overflow: auto;
+    border: 1px inset rgb(43, 43, 43);
 }
 
-/* Botões e selects */
+/* Destaque para mensagens */
+pre .error {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+pre .success {
+    color: #00ff88;
+}
+
+/* === Botões === */
 button {
     padding: 10px;
-    font-size: 16px;
+    font-size: 15px;
     background-color: rgb(118, 184, 63);
     color: white;
-    /* border: 1px inset rgb(23, 206, 30); */
     border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: all 0.25s ease;
+    border: none;
+    font-weight: bold;
 }
 
 button:disabled {
     background-color: #333;
-    color: white;
+    color: #999;
     cursor: not-allowed;
 }
 
-button:hover {
-    transform: scale(1.05);
+button:hover:not(:disabled) {
     background-color: rgb(23, 206, 30);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* Aumenta a sombra */
-    transform: translateY(-2px); /* Leve movimento para cima */
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 0 10px rgb(23, 206, 30);
 }
 
-/* Efeito ao focar */
-button:focus {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
-    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
-}
-
-select {
-    padding: 10px; /* Espaçamento interno */
-    font-size: 16px; /* Tamanho da fonte */
-    border-radius: 5px; /* Bordas arredondadas */
-    background-color: rgb(10, 14, 23); /* Cor de fundo */
-    color: rgb(23, 206, 30);
-    outline: none; /* Remove o contorno padrão ao focar */
-    border: none; /* Remove qualquer borda padrão */
-    border: 1px inset rgb(43, 43, 43);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra para efeito de profundidade */
-    transition: all 0.3s ease; /* Transição suave para interações */
-    cursor: pointer; /* Mostra o cursor de interação */
-}
-
-/* Efeito ao passar o mouse */
-select:hover {
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4); /* Aumenta a sombra */
-    transform: translateY(-2px); /* Leve movimento para cima */
-}
-
-/* Efeito ao focar */
-select:focus {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
-    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
-}
-
-
-/* Botão para limpar o console */
+/* Botões secundários */
 #clearLogBtn {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: #D9534F;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
+    background-color: #d9534f;
 }
-
 #clearLogBtn:hover {
-    background-color: rgb(38, 100, 157);
+    background-color: #c9302c;
+    box-shadow: 0 0 8px #ff4d4d;
 }
 
-/* Estilo para os checkboxes */
-label {
-    display: block;
-    font-size: 16px;
+#saveLogBtn, #refreshBtn {
+    background-color: rgb(118, 184, 63);
+}
+#saveLogBtn:hover, #refreshBtn:hover {
+    background-color: rgb(34, 139, 90);
+    box-shadow: 0 0 8px rgb(0, 255, 102);
 }
 
-input[type="radio"] {
-    margin-right: 5px;
+/* === Selects === */
+select {
+    padding: 8px;
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: rgb(10, 14, 23);
+    color: rgb(23, 206, 30);
+    border: 1px solid rgb(43, 43, 43);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-/* Estilização da lista de scripts selecionados */
+select:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.5);
+}
+
+/* === Lista de Scripts === */
 .scripts-list {
-    list-style: none; /* Remove os marcadores padrão */
+    list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
-    flex-direction: column; /* Coloca os itens em coluna */
-    gap: 10px; /* Espaço entre os itens */
+    flex-direction: column;
+    gap: 8px;
 }
 
 .scripts-list li {
     display: flex;
-    justify-content: space-between; /* Espaço entre o texto e o botão */
-    align-items: center; /* Alinha verticalmente os itens */
-    background-color: #222; /* Fundo escuro para destacar */
-    padding: 10px 15px;
-    border-radius: 8px; /* Borda arredondada */
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 8px 12px;
+    border-radius: 5px;
     color: white;
-    font-family: 'Courier New', Courier, monospace; /* Fonte estilizada */
-    font-size: 14px;
-}
-
-.scripts-list li:focus {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5); /* Destaque maior */
-    background-color: rgb(53, 53, 53); /* Leve alteração no fundo */
 }
 
 .scripts-list button {
-    background-color: #ff5555; /* Botão vermelho */
-    border: none;
-    padding: 5px 10px;
-    color: white;
+    background-color: #ff5555;
     font-size: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease; /* Transição suave */
+    padding: 5px 8px;
 }
-
 .scripts-list button:hover {
-    background-color: #ff3333; /* Tom mais claro ao passar o mouse */
+    background-color: #ff3333;
 }
 
-
-.container-script {
-    border: 10px #76b83f;
-    background-color: rgb(43, 43, 43);
-    border-radius: 5px;
-    padding: 5px;
-
+/* === Responsividade === */
+@media (max-width: 900px) {
+    .content {
+        flex-direction: column;
+    }
+    .left-column, .right-column {
+        max-width: 100%;
+        height: auto;
+    }
+    pre {
+        height: 300px;
+    }
+    #executarBtn {
+        width: 100%;
+    }
 }
 
-#saveLogBtn, #refreshBtn {
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 16px;
-    background-color: rgb(118, 184, 63); /* Verde para destaque */
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-}
-
-#saveLogBtn:hover, #refreshBtn:hover {
-    background-color: rgb(34, 139, 90);
-    transform: scale(1.05);
-}
-
-#executarBtn {
-    width: 300px;
+@media (max-width: 500px) {
+    body {
+        font-size: 12px;
+    }
+    button, select {
+        font-size: 13px;
+        padding: 8px;
+    }
 }
