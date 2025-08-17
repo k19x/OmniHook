@@ -1,0 +1,185 @@
+/* =========================
+   Configurações globais
+========================= */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', monospace;
+    background-color: #0b0e14;
+    color: #e5e7eb;
+}
+
+/* =========================
+   Container principal
+========================= */
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.content {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1400px;
+}
+
+/* =========================
+   Coluna Esquerda
+========================= */
+.left-column {
+    background: #111726;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    box-shadow: 0 0 10px #00ff99;
+}
+
+.left-column h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 16px;
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 5px;
+    margin-top: 15px;
+}
+
+/* =========================
+   Coluna Direita
+========================= */
+.right-column {
+    flex: 1;
+    background: #111726;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00ff99;
+}
+
+/* =========================
+   Botões e Selects
+========================= */
+button, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    transition: 0.3s;
+}
+
+button {
+    background: #00ff99;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #00cc7a;
+    transform: translateY(-2px);
+}
+
+button:disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
+}
+
+select {
+    background: #0b0e14;
+    color: #00ff99;
+    border: 1px solid #1f2937;
+}
+
+/* =========================
+   Radio Buttons
+========================= */
+.radio-group label {
+    display: block;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+/* =========================
+   Lista de scripts
+========================= */
+.scripts-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.scripts-list li {
+    background: #1a1f2e;
+    padding: 8px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.scripts-list button {
+    width: auto;
+    background: #ff5555;
+    color: #fff;
+    font-size: 12px;
+}
+
+.scripts-list button:hover {
+    background: #ff3333;
+}
+
+/* =========================
+   Log Console
+========================= */
+pre {
+    background: #000;
+    color: #00ff99;
+    padding: 15px;
+    border-radius: 5px;
+    height: 80vh;
+    overflow-y: auto;
+    font-family: 'Consolas', monospace;
+    font-size: 13px;
+}
+
+/* =========================
+   Botões do console
+========================= */
+.console-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.console-buttons button {
+    flex: 1;
+    background: #222;
+    color: #fff;
+    font-size: 13px;
+    border: 1px solid #1f2937;
+}
+
+.console-buttons button:hover {
+    background: #00ff99;
+    color: #000;
+}
+
+/* =========================
+   Scrollbar custom
+========================= */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff99;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111;
+}

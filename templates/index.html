@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniHook Fr1da</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <main class="content">
+            
+            <!-- Coluna Esquerda -->
+            <section class="left-column">
+                <h2>📱 Dispositivos</h2>
+                <button id="listarDispositivosBtn">Listar Dispositivos</button>
+                <select id="dispositivos">
+                    <option value="">Selecionar dispositivo</option>
+                </select>
+
+                <h2>⚙️ Opções de Execução</h2>
+                <div class="radio-group">
+                    <label><input type="radio" name="forma" value="-f" checked> Spawn (-f)</label>
+                    <label><input type="radio" name="forma" value="-F"> Frontmost (-F)</label>
+                    <label><input type="radio" name="forma" value="-n"> Name (-n)</label>
+                </div>
+
+                <h2>📦 Pacotes</h2>
+                <button id="listarPacotesBtn" disabled>Listar Pacotes</button>
+                <select id="pacotes">
+                    <option value="">Selecionar pacote</option>
+                </select>
+
+                <h2>📜 Scripts</h2>
+                <button id="listarScriptsBtn" disabled>Listar Scripts</button>
+                <select id="scripts">
+                    <option value="">Selecionar script</option>
+                </select>
+                <button id="adicionarScriptBtn" disabled>Adicionar Script</button>
+
+                <h2>🗂 Scripts Selecionados</h2>
+                <ul id="scriptsSelecionados" class="scripts-list"></ul>
+
+                <div class="action-buttons">
+                    <button id="executarBtn" disabled>▶ Executar Frida</button>
+                </div>
+
+                <div class="scripts-section">
+
+                <h2>🔧 Funções ADB</h2>
+                    <button id="ativarTcpipBtn">Ativar TCP/IP</button>
+                    <button id="statusConexaoBtn">Status Conexão</button>
+                    <button id="reiniciarFridaBtn">Reiniciar Frida</button>
+
+            </section>
+
+            <!-- Coluna Direita -->
+            <section class="right-column">
+                <pre id="log"></pre>
+                <div class="console-buttons">
+                    <button id="clearLogBtn"><i class="fas fa-trash"></i> Limpar</button>
+                    <button id="saveLogBtn"><i class="fas fa-save"></i> Salvar</button>
+                    <button id="refreshBtn"><i class="fas fa-sync"></i> Refresh</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/static/js/script.js" defer></script>
+</body>
+</html>
