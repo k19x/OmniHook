@@ -1,17 +1,12 @@
-// Conexão com Socket.IO
+// ==================== CONEXÃO COM BACKEND ==================== //
 var socket = io();
 
-// Função para adicionar mensagens no console
 function adicionarLog(mensagem) {
     const consoleElem = document.getElementById('log');
-    const p = document.createElement('p');
-    p.textContent = mensagem;
-    p.style.color = "#00ff88";
-    consoleElem.appendChild(p);
+    consoleElem.textContent += mensagem + "\n";
     consoleElem.scrollTop = consoleElem.scrollHeight;
 }
 
-// Receber logs do backend
 socket.on('log', function (mensagem) {
     if (typeof mensagem === "object") {
         adicionarLog(JSON.stringify(mensagem));
@@ -20,7 +15,13 @@ socket.on('log', function (mensagem) {
     }
 });
 
-// Habilitar funções ADB quando um dispositivo for selecionado
+socket.on('console_output', function(data) {
+    const consoleDiv = document.getElementById('console');
+    consoleDiv.innerHTML += `<span class="${data.tipo}">${data.mensagem}</span><br>`;
+    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+});
+
+// ==================== EVENTOS DE DISPOSITIVO ==================== //
 document.getElementById('dispositivos').addEventListener('change', function () {
     let selectedDevice = this.value;
     let botoes = [
@@ -33,7 +34,6 @@ document.getElementById('dispositivos').addEventListener('change', function () {
 
     botoes.forEach(btn => btn.disabled = !selectedDevice.trim());
 
-    // 🚀 NOVO: carregar pacotes automaticamente ao selecionar o dispositivo
     if (selectedDevice.trim()) {
         fetch('/listar_pacotes', {
             method: 'POST',
@@ -51,10 +51,7 @@ document.getElementById('dispositivos').addEventListener('change', function () {
                     opt.textContent = pkg;
                     select.appendChild(opt);
                 });
-
-                // Seleciona automaticamente o primeiro pacote
                 select.selectedIndex = 0;
-
                 adicionarLog(`[PACOTES] Pacotes do dispositivo ${selectedDevice} carregados!`);
             } else {
                 adicionarLog(`[PACOTES] Nenhum pacote encontrado para ${selectedDevice}.`);
@@ -64,9 +61,7 @@ document.getElementById('dispositivos').addEventListener('change', function () {
     }
 });
 
-// ---- BOTÕES ----
-
-// Ativar TCP/IP
+// ==================== BOTÕES DE ADB ==================== //
 document.getElementById('ativarTcpipBtn').addEventListener('click', function () {
     let dispositivo_id = document.getElementById('dispositivos').value;
     fetch('/ativar_tcpip', {
@@ -79,7 +74,6 @@ document.getElementById('ativarTcpipBtn').addEventListener('click', function () 
     .catch(err => adicionarLog(`[ERRO TCP/IP] ${err}`));
 });
 
-// Status Conexão
 document.getElementById('statusConexaoBtn').addEventListener('click', function () {
     let dispositivo_id = document.getElementById('dispositivos').value;
     fetch('/status_conexao', {
@@ -92,7 +86,6 @@ document.getElementById('statusConexaoBtn').addEventListener('click', function (
     .catch(err => adicionarLog(`[ERRO STATUS] ${err}`));
 });
 
-// Reiniciar Frida
 document.getElementById('reiniciarFridaBtn').addEventListener('click', function () {
     let dispositivo_id = document.getElementById('dispositivos').value;
     fetch('/reiniciar_frida', {
@@ -105,9 +98,7 @@ document.getElementById('reiniciarFridaBtn').addEventListener('click', function 
     .catch(err => adicionarLog(`[ERRO FRIDA] ${err}`));
 });
 
-// ---- OUTRAS FUNÇÕES DO SISTEMA ----
-
-// Listar dispositivos
+// ==================== LISTAGEM ==================== //
 document.getElementById('listarDispositivosBtn').addEventListener('click', function () {
     fetch('/listar_dispositivos')
     .then(res => res.json())
@@ -129,7 +120,6 @@ document.getElementById('listarDispositivosBtn').addEventListener('click', funct
     .catch(err => adicionarLog(`[ERRO DISPOSITIVOS] ${err}`));
 });
 
-// Listar pacotes (fallback manual)
 document.getElementById('listarPacotesBtn').addEventListener('click', function () {
     let dispositivo_id = document.getElementById('dispositivos').value;
     fetch('/listar_pacotes', {
@@ -148,8 +138,7 @@ document.getElementById('listarPacotesBtn').addEventListener('click', function (
                 opt.textContent = pkg;
                 select.appendChild(opt);
             });
-
-            select.selectedIndex = 0; // seleciona primeiro pacote
+            select.selectedIndex = 0;
             adicionarLog("[PACOTES] Lista carregada com sucesso!");
         } else {
             adicionarLog("[PACOTES] Nenhum pacote encontrado.");
@@ -158,7 +147,6 @@ document.getElementById('listarPacotesBtn').addEventListener('click', function (
     .catch(err => adicionarLog(`[ERRO PACOTES] ${err}`));
 });
 
-// Listar scripts
 document.getElementById('listarScriptsBtn').addEventListener('click', function () {
     fetch('/listar_scripts')
     .then(res => res.json())
@@ -181,7 +169,24 @@ document.getElementById('listarScriptsBtn').addEventListener('click', function (
     .catch(err => adicionarLog(`[ERRO SCRIPTS] ${err}`));
 });
 
-// Adicionar script na lista de selecionados
+document.getElementById('listarTemplatesBtn').addEventListener('click', function () {
+    fetch('/listar_templates')
+    .then(res => res.json())
+    .then(data => {
+        const select = document.getElementById('templates');
+        select.innerHTML = '<option value="">Selecionar template</option>';
+        data.forEach(t => {
+            let opt = document.createElement('option');
+            opt.value = t.arquivo;
+            opt.textContent = t.nome;
+            select.appendChild(opt);
+        });
+        adicionarLog("[TEMPLATES] Carregados com sucesso!");
+        document.getElementById('adicionarTemplateBtn').disabled = false;
+    });
+});
+
+// ==================== FRIDA E EXECUÇÃO ==================== //
 document.getElementById('adicionarScriptBtn').addEventListener('click', function () {
     const scriptSelect = document.getElementById('scripts');
     const selectedScript = scriptSelect.value;
@@ -206,83 +211,175 @@ document.getElementById('adicionarScriptBtn').addEventListener('click', function
     li.appendChild(btnRemove);
     lista.appendChild(li);
 
-    adicionarLog(`[SCRIPT] ${selectedScript} adicionado à execução.`);
+    adicionarLog(`[SCRIPT] ${selectedScript} adicionado.`);
 
-    // Habilitar botão Executar se houver dispositivo, pacote e script
-    const dispositivoSelecionado = document.getElementById('dispositivos').value.trim() !== "";
-    const pacoteSelecionado = document.getElementById('pacotes').value.trim() !== "";
-    if (dispositivoSelecionado && pacoteSelecionado) {
+    if (document.getElementById('dispositivos').value && document.getElementById('pacotes').value) {
         document.getElementById('executarBtn').disabled = false;
     }
 });
 
-// Executar Frida
 document.getElementById('executarBtn').addEventListener('click', function () {
     const dispositivo_id = document.getElementById('dispositivos').value;
     const pacote = document.getElementById('pacotes').value;
     const forma = document.querySelector('input[name="forma"]:checked').value;
 
-    // Pega todos os scripts selecionados
     const scripts = [];
     document.querySelectorAll('#scriptsSelecionados li').forEach(li => {
         scripts.push(li.firstChild.textContent);
     });
 
     if (!dispositivo_id || !pacote || scripts.length === 0) {
-        adicionarLog("[ERRO] Selecione um dispositivo, um pacote e pelo menos um script.");
+        adicionarLog("[ERRO] Selecione dispositivo, pacote e script.");
         return;
     }
 
-    // Envia para o backend via Socket.IO
-    socket.emit('executar_comando', {
-        dispositivo_id,
-        pacote,
-        scripts,
-        forma
-    });
-
+    socket.emit('executar_comando', { dispositivo_id, pacote, scripts, forma });
     adicionarLog("[INFO] Comando enviado para execução.");
 });
 
-socket.on('console_output', function(data) {
-    const consoleDiv = document.getElementById('console');
-    consoleDiv.innerHTML += `<span class="${data.tipo}">${data.mensagem}</span><br>`;
-    consoleDiv.scrollTop = consoleDiv.scrollHeight;
-});
+// ==================== PROXY ==================== //
+function getSelectedDevice() {
+    return document.getElementById("dispositivos").value;
+}
 
-// ===== BOTÕES DO CONSOLE =====
+async function setProxy() {
+    const device = getSelectedDevice();
+    const ip = document.getElementById("proxy-ip").value;
+    const port = document.getElementById("proxy-port").value;
 
-// Limpar console
-document.getElementById('clearLogBtn').addEventListener('click', function () {
-    const consoleElem = document.getElementById('log');
-    consoleElem.innerHTML = "";
-    adicionarLog("[INFO] Console limpo.");
-});
-
-// Salvar console em arquivo
-document.getElementById('saveLogBtn').addEventListener('click', function () {
-    const consoleElem = document.getElementById('log');
-    let conteudo = consoleElem.innerText || consoleElem.textContent;
-
-    if (!conteudo.trim()) {
-        adicionarLog("[ERRO] Console vazio, nada para salvar.");
+    if (!device) {
+        adicionarLog("[ERRO] Nenhum dispositivo selecionado para aplicar proxy!");
         return;
     }
 
-    let blob = new Blob([conteudo], { type: "text/plain" });
-    let url = URL.createObjectURL(blob);
+    try {
+        const res = await fetch("/set_proxy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ device, ip, port })
+        });
+        const data = await res.json();
+        adicionarLog(`[PROXY] ${data.mensagem || data.erro}`);
+    } catch (err) {
+        adicionarLog(`[ERRO PROXY] ${err}`);
+    }
+}
 
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = "log_frida.txt";
-    a.click();
+async function getProxy() {
+    const device = getSelectedDevice();
+    if (!device) {
+        adicionarLog("[ERRO] Nenhum dispositivo selecionado para ver proxy!");
+        return;
+    }
 
-    URL.revokeObjectURL(url);
-    adicionarLog("[INFO] Log salvo como log_frida.txt");
+    try {
+        const res = await fetch("/get_proxy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ device })
+        });
+        const data = await res.json();
+        adicionarLog(`[PROXY] Proxy atual: ${data.proxy || data.erro}`);
+    } catch (err) {
+        adicionarLog(`[ERRO PROXY] ${err}`);
+    }
+}
+
+async function clearProxy() {
+    const device = getSelectedDevice();
+    if (!device) {
+        adicionarLog("[ERRO] Nenhum dispositivo selecionado para limpar proxy!");
+        return;
+    }
+
+    try {
+        const res = await fetch("/clear_proxy", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ device })
+        });
+        const data = await res.json();
+        adicionarLog(`[PROXY] ${data.mensagem || data.erro}`);
+    } catch (err) {
+        adicionarLog(`[ERRO PROXY] ${err}`);
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("setProxyBtn")?.addEventListener("click", setProxy);
+    document.getElementById("getProxyBtn")?.addEventListener("click", getProxy);
+    document.getElementById("clearProxyBtn")?.addEventListener("click", clearProxy);
+    document.getElementById('clearLogBtn')?.addEventListener('click', () => {
+        document.getElementById('log').innerHTML = "";
+        adicionarLog("[INFO] Console limpo.");
+    });
+    document.getElementById('saveLogBtn')?.addEventListener('click', () => {
+        const consoleElem = document.getElementById('log');
+        const conteudo = consoleElem.innerText || consoleElem.textContent;
+
+        if (!conteudo.trim()) {
+            adicionarLog("[ERRO] Console vazio, nada para salvar.");
+            return;
+        }
+
+        const pacote = document.getElementById('pacotes').value || "sem-pacote";
+        const agora = new Date();
+        const dataHora = agora.toISOString().replace("T", "_").replace(/:/g, "-").split(".")[0];
+        const nomeArquivo = `${dataHora}_${pacote}.txt`;
+
+        const blob = new Blob([conteudo], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = nomeArquivo;
+        a.click();
+        URL.revokeObjectURL(url);
+
+        adicionarLog(`[INFO] Log salvo como ${nomeArquivo}`);
+    });
+    document.getElementById('refreshBtn')?.addEventListener('click', () => location.reload());
 });
 
-// Atualizar página (Refresh)
-document.getElementById('refreshBtn').addEventListener('click', function () {
-    location.reload();
+// screenshot
+document.getElementById('screenshotBtn').addEventListener('click', function () {
+    const dispositivo_id = document.getElementById('dispositivos').value;
+    
+    if (!dispositivo_id) {
+        adicionarLog("[ERRO] Nenhum dispositivo selecionado para screenshot.");
+        return;
+    }
+
+    fetch('/screenshot', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ device: dispositivo_id })
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+        adicionarLog(`[SCREENSHOT] Captura concluída para ${dispositivo_id}`);
+    })
+    .catch(err => adicionarLog(`[ERRO SCREENSHOT] ${err}`));
 });
-// ===== FIM BOTÕES DO CONSOLE =====
+
+// Mirror
+document.getElementById('mirrorBtn').addEventListener('click', () => {
+    const dispositivo_id = document.getElementById('dispositivos').value;
+
+    if (!dispositivo_id) {
+        adicionarLog("[ERRO] Nenhum dispositivo selecionado para mirror.");
+        return;
+    }
+
+    fetch('/mirror', {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dispositivo_id })
+    })
+    .then(res => res.json())
+    .then(data => {
+        adicionarLog(`[MIRROR] ${data.mensagem || data.erro}`);
+    })
+    .catch(err => adicionarLog(`[ERRO MIRROR] ${err}`));
+});
