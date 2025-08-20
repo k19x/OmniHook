@@ -14,12 +14,14 @@
             
             <!-- Coluna Esquerda -->
             <section class="left-column">
+                <!-- Dispositivos -->
                 <h2>📱 Dispositivos</h2>
                 <button id="listarDispositivosBtn">Listar Dispositivos</button>
                 <select id="dispositivos">
                     <option value="">Selecionar dispositivo</option>
                 </select>
 
+                <!-- Opções -->
                 <h2>⚙️ Opções de Execução</h2>
                 <div class="radio-group">
                     <label><input type="radio" name="forma" value="-f" checked> Spawn (-f)</label>
@@ -27,12 +29,14 @@
                     <label><input type="radio" name="forma" value="-n"> Name (-n)</label>
                 </div>
 
+                <!-- Pacotes -->
                 <h2>📦 Pacotes</h2>
                 <button id="listarPacotesBtn" disabled>Listar Pacotes</button>
                 <select id="pacotes">
                     <option value="">Selecionar pacote</option>
                 </select>
 
+                <!-- Scripts -->
                 <h2>📜 Scripts</h2>
                 <button id="listarScriptsBtn" disabled>Listar Scripts</button>
                 <select id="scripts">
@@ -40,6 +44,7 @@
                 </select>
                 <button id="adicionarScriptBtn" disabled>Adicionar Script</button>
 
+                <!-- Scripts Selecionados -->
                 <h2>🗂 Scripts Selecionados</h2>
                 <ul id="scriptsSelecionados" class="scripts-list"></ul>
 
@@ -47,12 +52,54 @@
                     <button id="executarBtn" disabled>▶ Executar Frida</button>
                 </div>
 
+                <!-- Funções ADB -->
                 <div class="scripts-section">
-
-                <h2>🔧 Funções ADB</h2>
+                    <h2>🔧 Funções ADB</h2>
                     <button id="ativarTcpipBtn">Ativar TCP/IP</button>
                     <button id="statusConexaoBtn">Status Conexão</button>
                     <button id="reiniciarFridaBtn">Reiniciar Frida</button>
+                </div>
+
+                <!-- Templates -->
+                <h2>📜 Templates Frida</h2>
+                <button id="listarTemplatesBtn">Listar Templates</button>
+                <select id="templates">
+                    <option value="">Selecionar template</option>
+                </select>
+                <button id="adicionarTemplateBtn" disabled>Adicionar Template</button>
+
+                <!-- Logcat -->
+                <h2>📡 Logcat</h2>
+                <button id="logcatBtn">Iniciar Logcat</button>
+
+                <!-- APK -->
+                <h2>📥 APK</h2>
+                <button id="dumpApkBtn">Extrair APK</button>
+
+                <!-- 🔥 Novas Integrações -->
+                <h2>🖼 Screen / Mirror</h2>
+                <button id="screenshotBtn">📸 Captura de Tela</button>
+                <button id="mirrorBtn">🖥️ Mirror</button>
+
+                <h2>🔀 Port Forwarding</h2>
+                <button id="portForwardBtn">Ativar Port Forward</button>
+
+                <!-- 🌐 Proxy -->
+                <h2>🌐 Configuração de Proxy</h2>
+                <div class="input-group">
+                    <label for="proxy-ip">IP do Proxy:</label>
+                    <input type="text" name="proxy" id="proxy-ip" placeholder="192.168.100.10">
+                </div>
+                <div class="input-group">
+                    <label for="proxy-port">Porta:</label>
+                    <input type="text" name="proxy" id="proxy-port" placeholder="8080">
+                </div>
+                <div class="button-group">
+                    <button id="setProxyBtn">Aplicar Proxy</button>
+                    <button id="getProxyBtn">Ver Proxy</button>
+                    <button id="clearProxyBtn" class="danger">Limpar Proxy</button>
+                </div>
+                <p id="proxy-status" class="status-text"></p>
 
             </section>
 
@@ -70,6 +117,6 @@
     </div>
 
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="/static/js/script.js" defer></script>
+<script src="/static/js/script.js" defer></script>
 </body>
 </html>

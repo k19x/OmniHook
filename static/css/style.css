@@ -1,12 +1,16 @@
 /* =========================
-   Configurações globais
+   Tema Visual Studio Code Dark+
 ========================= */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Roboto', monospace;
-    background-color: #0b0e14;
-    color: #e5e7eb;
+    font-family: 'Segoe UI', 'Consolas', monospace;
+    background-color: #1e1e1e; /* fundo padrão do VSCode */
+    color: #d4d4d4;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 /* =========================
@@ -15,91 +19,92 @@ body {
 .container {
     display: flex;
     justify-content: center;
+    width: 100%;
+    height: 100%;
     padding: 20px;
+    box-sizing: border-box;
 }
 
 .content {
     display: flex;
     gap: 20px;
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
+    height: 100%;
 }
 
 /* =========================
    Coluna Esquerda
 ========================= */
 .left-column {
-    background: #111726;
-    padding: 20px;
-    border-radius: 10px;
-    width: 320px;
-    box-shadow: 0 0 10px #00ff99;
+    background: #252526;
+    padding: 15px;
+    border-radius: 6px;
+    width: 260px;
+    overflow-y: auto;
+    border: 1px solid #3c3c3c;
+    flex-shrink: 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .left-column h2 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 16px;
-    border-bottom: 1px solid #1f2937;
-    padding-bottom: 5px;
-    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #569cd6; /* azul típico do VSCode */
+    border-bottom: 1px solid #3c3c3c;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 /* =========================
-   Coluna Direita
+   Coluna Direita (Console)
 ========================= */
 .right-column {
     flex: 1;
-    background: #111726;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px #00ff99;
+    background: #252526;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #3c3c3c;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 /* =========================
    Botões e Selects
 ========================= */
-button, select {
+button, select, input[name=proxy] {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: none;
+    padding: 8px;
+    margin-top: 6px;
+    font-size: 13px;
+    border-radius: 4px;
+    border: 1px solid #3c3c3c;
     outline: none;
-    transition: 0.3s;
+    transition: 0.2s;
+    box-sizing: border-box;
 }
 
 button {
-    background: #00ff99;
-    color: #000;
-    font-weight: bold;
+    background: #0e639c;
+    color: #ffffff;
+    font-weight: 500;
     cursor: pointer;
 }
 
 button:hover {
-    background: #00cc7a;
-    transform: translateY(-2px);
+    background: #1177bb;
 }
 
 button:disabled {
-    background: #333;
-    color: #777;
+    background: #3c3c3c;
+    color: #808080;
     cursor: not-allowed;
 }
 
-select {
-    background: #0b0e14;
-    color: #00ff99;
-    border: 1px solid #1f2937;
-}
-
-/* =========================
-   Radio Buttons
-========================= */
-.radio-group label {
-    display: block;
-    margin-top: 5px;
-    cursor: pointer;
+select, input {
+    background: #1e1e1e;
+    color: #d4d4d4;
 }
 
 /* =========================
@@ -112,39 +117,58 @@ select {
 }
 
 .scripts-list li {
-    background: #1a1f2e;
+    background: #1e1e1e;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 4px;
     display: flex;
     justify-content: space-between;
     margin-top: 5px;
     font-size: 13px;
+    border: 1px solid #3c3c3c;
 }
 
 .scripts-list button {
     width: auto;
-    background: #ff5555;
+    background: #d16969; /* vermelho do VSCode */
     color: #fff;
     font-size: 12px;
+    border: none;
 }
 
 .scripts-list button:hover {
-    background: #ff3333;
+    background: #a43f3f;
 }
 
 /* =========================
-   Log Console
+   Console (Log)
 ========================= */
 pre {
-    background: #000;
-    color: #00ff99;
+    background: #1e1e1e;
+    color: #d4d4d4;
     padding: 15px;
-    border-radius: 5px;
-    height: 80vh;
+    border-radius: 6px;
+    flex: 1;
     overflow-y: auto;
     font-family: 'Consolas', monospace;
     font-size: 13px;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    line-height: 1.4;
+    border: 1px solid #3c3c3c;
 }
+
+/* =========================
+   Destaques no estilo VSCode
+========================= */
+.keyword { color: #569cd6; }    /* azul */
+.string  { color: #d69d85; }    /* laranja */
+.number  { color: #b5cea8; }    /* verde claro */
+.comment { color: #6a9955; }    /* verde escuro */
+.func    { color: #dcdcaa; }    /* amarelo */
+.error   { color: #f44747; }    /* vermelho */
 
 /* =========================
    Botões do console
@@ -157,29 +181,33 @@ pre {
 
 .console-buttons button {
     flex: 1;
-    background: #222;
-    color: #fff;
+    background: #3c3c3c;
+    color: #d4d4d4;
     font-size: 13px;
-    border: 1px solid #1f2937;
+    border: 1px solid #555;
 }
 
 .console-buttons button:hover {
-    background: #00ff99;
-    color: #000;
+    background: #0e639c;
+    color: #fff;
 }
 
 /* =========================
-   Scrollbar custom
+   Scrollbar custom (VSCode style)
 ========================= */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #00ff99;
+    background: #424242;
     border-radius: 5px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a;
+}
+
 ::-webkit-scrollbar-track {
-    background: #111;
+    background: #1e1e1e;
 }
