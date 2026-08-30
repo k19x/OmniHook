@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, send_file
 from flask_socketio import SocketIO
 import os
+import re
 import subprocess
 import threading
 import time
@@ -41,10 +42,19 @@ def run_cmd_background(cmd):
     threading.Thread(target=runner, daemon=True).start()
 
 
+_SAFE_PARAM_RE = re.compile(r'^[a-zA-Z0-9._:\-]{1,128}$')
+
+
+def _safe(value, name="parâmetro"):
+    if not value or not _SAFE_PARAM_RE.match(str(value)):
+        raise ValueError(f"{name} inválido")
+    return value
+
+
 def executar_comando_adb(dispositivo_id, comando):
     """Executa comando ADB específico em um dispositivo."""
     try:
-        cmd = ["adb", "-s", dispositivo_id] + comando
+        cmd = ["adb", "-s", _safe(dispositivo_id, "dispositivo_id")] + comando
         resultado = subprocess.check_output(cmd, text=True).strip()
         return {"mensagem": resultado}
     except subprocess.CalledProcessError as e:
@@ -126,6 +136,7 @@ def listar_pacotes():
     if not dispositivo_id:
         return jsonify({"erro": "ID do dispositivo não fornecido"}), 400
     try:
+        _safe(dispositivo_id, "dispositivo_id")
         cmd = ["adb", "-s", dispositivo_id, "shell", "pm", "list", "packages", "-3"]
         resultado = subprocess.check_output(cmd, text=True).splitlines()
         pacotes = [pkg.replace("package:", "").strip() for pkg in resultado]
@@ -140,6 +151,7 @@ def status_conexao():
     dispositivo_id = data.get("dispositivo_id")
 
     try:
+        _safe(dispositivo_id, "dispositivo_id")
         cmd = ["adb", "-s", dispositivo_id, "get-state"]
         resultado = subprocess.check_output(cmd, text=True).strip()
 
@@ -165,6 +177,7 @@ def ativar_tcpip():
         return jsonify({"erro": "ID do dispositivo não fornecido."}), 400
 
     try:
+        _safe(dispositivo_id, "dispositivo_id")
         # 1. Obter o IP atual do dispositivo (via Wi-Fi)
         cmd_ip = ["adb", "-s", dispositivo_id, "shell", "ip", "-f", "inet", "addr", "show", "wlan0"]
         resultado = subprocess.check_output(cmd_ip, text=True).splitlines()
@@ -201,6 +214,7 @@ def reiniciar_frida():
     data = request.json
     dispositivo_id = data.get("dispositivo_id")
     try:
+        _safe(dispositivo_id, "dispositivo_id")
         subprocess.run(["adb", "-s", dispositivo_id, "shell", "su -c", "pkill", "-f", "frida-server"], check=False)
         subprocess.run(["adb", "-s", dispositivo_id, "shell", "su -c", "nohup", "./data/local/tmp/frida-server &"], check=False)
         return jsonify({"mensagem": "Frida reiniciado com sucesso!"})
@@ -239,6 +253,7 @@ def screenshot():
     if not device_id:
         return jsonify({"erro": "Nenhum dispositivo selecionado"}), 400
 
+    _safe(device_id, "device")
     filename = os.path.join(OUTPUTS, f"screenshot_{device_id}.png")
     cmd = ["adb", "-s", device_id, "exec-out", "screencap", "-p"]
 
@@ -258,11 +273,13 @@ def screenrecord():
     if not device_id:
         return jsonify({"erro": "Nenhum dispositivo selecionado"}), 400
 
+    _safe(device_id, "device")
+    safe_duration = int(duration)
     filename = os.path.join(OUTPUTS, f"screenrecord_{device_id}_{int(time.time())}.mp4")
-    cmd = f"adb -s {device_id} shell screenrecord --time-limit {duration} /sdcard/out.mp4 && adb -s {device_id} pull /sdcard/out.mp4 {filename}"
 
     try:
-        os.system(cmd)
+        subprocess.run(["adb", "-s", device_id, "shell", "screenrecord", "--time-limit", str(safe_duration), "/sdcard/out.mp4"], check=True)
+        subprocess.run(["adb", "-s", device_id, "pull", "/sdcard/out.mp4", filename], check=True)
         if os.path.exists(filename):
             return send_file(filename, mimetype="video/mp4")
         else:
@@ -280,6 +297,7 @@ def iniciar_mirror():
         if not dispositivo_id:
             return jsonify({"erro": "Dispositivo não informado"}), 400
 
+        _safe(dispositivo_id, "dispositivo_id")
         base_dir = os.path.dirname(os.path.abspath(__file__))
         caminho_scrcpy = os.path.join(base_dir, "mirror", "scrcpy.exe")
 
@@ -298,6 +316,8 @@ def dump_apk():
         return jsonify({"erro": "Dispositivo ou pacote inválido"}), 400
 
     try:
+        _safe(device_id, "device")
+        _safe(package, "package")
         path = subprocess.check_output(["adb", "-s", device_id, "shell", "pm", "path", package], text=True).strip()
         if not path.startswith("package:"):
             return jsonify({"erro": f"Pacote {package} não encontrado"}), 404
@@ -321,7 +341,10 @@ def port_forward():
         return jsonify({"erro": "Parâmetros inválidos"}), 400
 
     try:
-        cmd = ["adb", "-s", device_id, "forward", f"tcp:{local}", f"tcp:{remote}"]
+        _safe(device_id, "device")
+        local_port = int(local)
+        remote_port = int(remote)
+        cmd = ["adb", "-s", device_id, "forward", f"tcp:{local_port}", f"tcp:{remote_port}"]
         subprocess.check_output(cmd, text=True)
         return jsonify({"resultado": f"Port forwarding ativo: {local} -> {remote}"})
     except Exception as e:
@@ -338,7 +361,10 @@ def set_proxy():
         return jsonify({"erro": "Parâmetros inválidos"}), 400
 
     try:
-        cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "put", "global", "http_proxy", f"{ip}:{port}"]
+        _safe(device_id, "device")
+        _safe(ip, "ip")
+        proxy_port = int(port)
+        cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "put", "global", "http_proxy", f"{ip}:{proxy_port}"]
         subprocess.run(cmd, check=True)
         return jsonify({"mensagem": f"✅ Proxy definido: {ip}:{port}"})
     except Exception as e:
@@ -354,6 +380,7 @@ def get_proxy():
         return jsonify({"erro": "Dispositivo não selecionado"}), 400
 
     try:
+        _safe(device_id, "device")
         cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "get", "global", "http_proxy"]
         resultado = subprocess.check_output(cmd, text=True).strip()
         return jsonify({"proxy": resultado})
@@ -370,6 +397,7 @@ def clear_proxy():
         return jsonify({"erro": "Dispositivo não selecionado"}), 400
 
     try:
+        _safe(device_id, "device")
         cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "put", "global", "http_proxy", ":0"]
         subprocess.run(cmd, check=True)
         return jsonify({"mensagem": "🧹 Proxy limpo com sucesso!"})
@@ -393,6 +421,8 @@ def executar_comando(data):
         script_path = os.path.join(SCRIPT_PATH, script)
         script_args.extend(['-l', script_path])
 
+    _safe(dispositivo_id, "dispositivo_id")
+    _safe(pacote, "pacote")
     cmd = ["frida", "-D", dispositivo_id, forma, pacote] + script_args
     run_cmd_background(cmd)
 
