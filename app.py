@@ -136,7 +136,7 @@ def listar_pacotes():
     if not dispositivo_id:
         return jsonify({"erro": "ID do dispositivo não fornecido"}), 400
     try:
-        _safe(dispositivo_id, "dispositivo_id")
+        dispositivo_id = _safe(dispositivo_id, "dispositivo_id")
         cmd = ["adb", "-s", dispositivo_id, "shell", "pm", "list", "packages", "-3"]
         resultado = subprocess.check_output(cmd, text=True).splitlines()
         pacotes = [pkg.replace("package:", "").strip() for pkg in resultado]
@@ -151,7 +151,7 @@ def status_conexao():
     dispositivo_id = data.get("dispositivo_id")
 
     try:
-        _safe(dispositivo_id, "dispositivo_id")
+        dispositivo_id = _safe(dispositivo_id, "dispositivo_id")
         cmd = ["adb", "-s", dispositivo_id, "get-state"]
         resultado = subprocess.check_output(cmd, text=True).strip()
 
@@ -177,7 +177,7 @@ def ativar_tcpip():
         return jsonify({"erro": "ID do dispositivo não fornecido."}), 400
 
     try:
-        _safe(dispositivo_id, "dispositivo_id")
+        dispositivo_id = _safe(dispositivo_id, "dispositivo_id")
         # 1. Obter o IP atual do dispositivo (via Wi-Fi)
         cmd_ip = ["adb", "-s", dispositivo_id, "shell", "ip", "-f", "inet", "addr", "show", "wlan0"]
         resultado = subprocess.check_output(cmd_ip, text=True).splitlines()
@@ -316,8 +316,8 @@ def dump_apk():
         return jsonify({"erro": "Dispositivo ou pacote inválido"}), 400
 
     try:
-        _safe(device_id, "device")
-        _safe(package, "package")
+        device_id = _safe(device_id, "device")
+        package = _safe(package, "package")
         path = subprocess.check_output(["adb", "-s", device_id, "shell", "pm", "path", package], text=True).strip()
         if not path.startswith("package:"):
             return jsonify({"erro": f"Pacote {package} não encontrado"}), 404
@@ -341,7 +341,7 @@ def port_forward():
         return jsonify({"erro": "Parâmetros inválidos"}), 400
 
     try:
-        _safe(device_id, "device")
+        device_id = _safe(device_id, "device")
         local_port = int(local)
         remote_port = int(remote)
         cmd = ["adb", "-s", device_id, "forward", f"tcp:{local_port}", f"tcp:{remote_port}"]
@@ -380,7 +380,7 @@ def get_proxy():
         return jsonify({"erro": "Dispositivo não selecionado"}), 400
 
     try:
-        _safe(device_id, "device")
+        device_id = _safe(device_id, "device")
         cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "get", "global", "http_proxy"]
         resultado = subprocess.check_output(cmd, text=True).strip()
         return jsonify({"proxy": resultado})
