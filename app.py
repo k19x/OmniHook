@@ -136,8 +136,7 @@ def listar_pacotes():
     if not dispositivo_id:
         return jsonify({"erro": "ID do dispositivo não fornecido"}), 400
     try:
-        _safe(dispositivo_id, "dispositivo_id")
-        cmd = ["adb", "-s", dispositivo_id, "shell", "pm", "list", "packages", "-3"]
+        cmd = ["adb", "-s", _safe(dispositivo_id, "dispositivo_id"), "shell", "pm", "list", "packages", "-3"]
         resultado = subprocess.check_output(cmd, text=True).splitlines()
         pacotes = [pkg.replace("package:", "").strip() for pkg in resultado]
         return jsonify(pacotes)
@@ -151,8 +150,7 @@ def status_conexao():
     dispositivo_id = data.get("dispositivo_id")
 
     try:
-        _safe(dispositivo_id, "dispositivo_id")
-        cmd = ["adb", "-s", dispositivo_id, "get-state"]
+        cmd = ["adb", "-s", _safe(dispositivo_id, "dispositivo_id"), "get-state"]
         resultado = subprocess.check_output(cmd, text=True).strip()
 
         status_map = {
@@ -177,9 +175,9 @@ def ativar_tcpip():
         return jsonify({"erro": "ID do dispositivo não fornecido."}), 400
 
     try:
-        _safe(dispositivo_id, "dispositivo_id")
+        safe_id = _safe(dispositivo_id, "dispositivo_id")
         # 1. Obter o IP atual do dispositivo (via Wi-Fi)
-        cmd_ip = ["adb", "-s", dispositivo_id, "shell", "ip", "-f", "inet", "addr", "show", "wlan0"]
+        cmd_ip = ["adb", "-s", safe_id, "shell", "ip", "-f", "inet", "addr", "show", "wlan0"]
         resultado = subprocess.check_output(cmd_ip, text=True).splitlines()
 
         ip = None
@@ -193,7 +191,7 @@ def ativar_tcpip():
             return jsonify({"erro": "❌ Não foi possível identificar o IP do dispositivo via wlan0."}), 500
 
         # 2. Ativar o modo TCP/IP
-        subprocess.run(["adb", "-s", dispositivo_id, "tcpip", "5555"], check=True)
+        subprocess.run(["adb", "-s", safe_id, "tcpip", "5555"], check=True)
 
         # 3. Conectar via IP
         connect_cmd = ["adb", "connect", f"{ip}:5555"]
@@ -214,9 +212,9 @@ def reiniciar_frida():
     data = request.json
     dispositivo_id = data.get("dispositivo_id")
     try:
-        _safe(dispositivo_id, "dispositivo_id")
-        subprocess.run(["adb", "-s", dispositivo_id, "shell", "su -c", "pkill", "-f", "frida-server"], check=False)
-        subprocess.run(["adb", "-s", dispositivo_id, "shell", "su -c", "nohup", "./data/local/tmp/frida-server &"], check=False)
+        safe_id = _safe(dispositivo_id, "dispositivo_id")
+        subprocess.run(["adb", "-s", safe_id, "shell", "su -c", "pkill", "-f", "frida-server"], check=False)
+        subprocess.run(["adb", "-s", safe_id, "shell", "su -c", "nohup", "./data/local/tmp/frida-server &"], check=False)
         return jsonify({"mensagem": "Frida reiniciado com sucesso!"})
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
@@ -253,9 +251,9 @@ def screenshot():
     if not device_id:
         return jsonify({"erro": "Nenhum dispositivo selecionado"}), 400
 
-    _safe(device_id, "device")
-    filename = os.path.join(OUTPUTS, f"screenshot_{device_id}.png")
-    cmd = ["adb", "-s", device_id, "exec-out", "screencap", "-p"]
+    safe_device = _safe(device_id, "device")
+    filename = os.path.join(OUTPUTS, f"screenshot_{safe_device}.png")
+    cmd = ["adb", "-s", safe_device, "exec-out", "screencap", "-p"]
 
     try:
         with open(filename, "wb") as f:
@@ -273,13 +271,13 @@ def screenrecord():
     if not device_id:
         return jsonify({"erro": "Nenhum dispositivo selecionado"}), 400
 
-    _safe(device_id, "device")
+    safe_device = _safe(device_id, "device")
     safe_duration = int(duration)
-    filename = os.path.join(OUTPUTS, f"screenrecord_{device_id}_{int(time.time())}.mp4")
+    filename = os.path.join(OUTPUTS, f"screenrecord_{safe_device}_{int(time.time())}.mp4")
 
     try:
-        subprocess.run(["adb", "-s", device_id, "shell", "screenrecord", "--time-limit", str(safe_duration), "/sdcard/out.mp4"], check=True)
-        subprocess.run(["adb", "-s", device_id, "pull", "/sdcard/out.mp4", filename], check=True)
+        subprocess.run(["adb", "-s", safe_device, "shell", "screenrecord", "--time-limit", str(safe_duration), "/sdcard/out.mp4"], check=True)
+        subprocess.run(["adb", "-s", safe_device, "pull", "/sdcard/out.mp4", filename], check=True)
         if os.path.exists(filename):
             return send_file(filename, mimetype="video/mp4")
         else:
@@ -297,11 +295,11 @@ def iniciar_mirror():
         if not dispositivo_id:
             return jsonify({"erro": "Dispositivo não informado"}), 400
 
-        _safe(dispositivo_id, "dispositivo_id")
+        safe_id = _safe(dispositivo_id, "dispositivo_id")
         base_dir = os.path.dirname(os.path.abspath(__file__))
         caminho_scrcpy = os.path.join(base_dir, "mirror", "scrcpy.exe")
 
-        subprocess.Popen([caminho_scrcpy, "-s", dispositivo_id])
+        subprocess.Popen([caminho_scrcpy, "-s", safe_id])
         return jsonify({"mensagem": f"✅ Mirror iniciado para {dispositivo_id} com sucesso!"})
 
     except Exception as e:
@@ -316,15 +314,15 @@ def dump_apk():
         return jsonify({"erro": "Dispositivo ou pacote inválido"}), 400
 
     try:
-        _safe(device_id, "device")
-        _safe(package, "package")
-        path = subprocess.check_output(["adb", "-s", device_id, "shell", "pm", "path", package], text=True).strip()
+        safe_device = _safe(device_id, "device")
+        safe_package = _safe(package, "package")
+        path = subprocess.check_output(["adb", "-s", safe_device, "shell", "pm", "path", safe_package], text=True).strip()
         if not path.startswith("package:"):
             return jsonify({"erro": f"Pacote {package} não encontrado"}), 404
 
         apk_path = path.replace("package:", "")
-        filename = os.path.join(OUTPUTS, f"{package}.apk")
-        subprocess.run(["adb", "-s", device_id, "pull", apk_path, filename], check=True)
+        filename = os.path.join(OUTPUTS, f"{safe_package}.apk")
+        subprocess.run(["adb", "-s", safe_device, "pull", apk_path, filename], check=True)
         return send_file(filename, mimetype="application/vnd.android.package-archive")
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
@@ -341,10 +339,9 @@ def port_forward():
         return jsonify({"erro": "Parâmetros inválidos"}), 400
 
     try:
-        _safe(device_id, "device")
         local_port = int(local)
         remote_port = int(remote)
-        cmd = ["adb", "-s", device_id, "forward", f"tcp:{local_port}", f"tcp:{remote_port}"]
+        cmd = ["adb", "-s", _safe(device_id, "device"), "forward", f"tcp:{local_port}", f"tcp:{remote_port}"]
         subprocess.check_output(cmd, text=True)
         return jsonify({"resultado": f"Port forwarding ativo: {local} -> {remote}"})
     except Exception as e:
@@ -361,10 +358,10 @@ def set_proxy():
         return jsonify({"erro": "Parâmetros inválidos"}), 400
 
     try:
-        _safe(device_id, "device")
-        _safe(ip, "ip")
+        safe_device = _safe(device_id, "device")
+        safe_ip = _safe(ip, "ip")
         proxy_port = int(port)
-        cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "put", "global", "http_proxy", f"{ip}:{proxy_port}"]
+        cmd = ["adb", "-s", safe_device, "shell", "su -c", "settings", "put", "global", "http_proxy", f"{safe_ip}:{proxy_port}"]
         subprocess.run(cmd, check=True)
         return jsonify({"mensagem": f"✅ Proxy definido: {ip}:{port}"})
     except Exception as e:
@@ -380,8 +377,7 @@ def get_proxy():
         return jsonify({"erro": "Dispositivo não selecionado"}), 400
 
     try:
-        _safe(device_id, "device")
-        cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "get", "global", "http_proxy"]
+        cmd = ["adb", "-s", _safe(device_id, "device"), "shell", "su -c", "settings", "get", "global", "http_proxy"]
         resultado = subprocess.check_output(cmd, text=True).strip()
         return jsonify({"proxy": resultado})
     except Exception as e:
@@ -397,8 +393,7 @@ def clear_proxy():
         return jsonify({"erro": "Dispositivo não selecionado"}), 400
 
     try:
-        _safe(device_id, "device")
-        cmd = ["adb", "-s", device_id, "shell", "su -c", "settings", "put", "global", "http_proxy", ":0"]
+        cmd = ["adb", "-s", _safe(device_id, "device"), "shell", "su -c", "settings", "put", "global", "http_proxy", ":0"]
         subprocess.run(cmd, check=True)
         return jsonify({"mensagem": "🧹 Proxy limpo com sucesso!"})
     except Exception as e:
