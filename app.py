@@ -2,6 +2,7 @@ from flask import Flask, render_template, jsonify, request, send_file
 from flask_socketio import SocketIO
 import os
 import re
+import shlex
 import subprocess
 import threading
 import time
@@ -301,7 +302,7 @@ def iniciar_mirror():
         base_dir = os.path.dirname(os.path.abspath(__file__))
         caminho_scrcpy = os.path.join(base_dir, "mirror", "scrcpy.exe")
 
-        subprocess.Popen([caminho_scrcpy, "-s", dispositivo_id])
+        subprocess.Popen([caminho_scrcpy, "-s", shlex.quote(dispositivo_id)])
         return jsonify({"mensagem": f"✅ Mirror iniciado para {dispositivo_id} com sucesso!"})
 
     except Exception as e:
