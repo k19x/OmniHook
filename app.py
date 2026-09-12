@@ -322,7 +322,9 @@ def dump_apk():
         if not path.startswith("package:"):
             return jsonify({"erro": f"Pacote {package} não encontrado"}), 404
 
-        apk_path = path.replace("package:", "")
+        apk_path = path.replace("package:", "").strip()
+        if not re.match(r'^/[a-zA-Z0-9/._-]+$', apk_path):
+            return jsonify({"erro": "Caminho APK inválido"}), 400
         filename = os.path.join(OUTPUTS, f"{package}.apk")
         subprocess.run(["adb", "-s", device_id, "pull", apk_path, filename], check=True)
         return send_file(filename, mimetype="application/vnd.android.package-archive")
