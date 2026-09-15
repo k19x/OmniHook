@@ -423,6 +423,7 @@ def executar_comando(data):
 
     _safe(dispositivo_id, "dispositivo_id")
     _safe(pacote, "pacote")
+    _safe(forma, "forma")
     cmd = ["frida", "-D", dispositivo_id, forma, pacote] + script_args
     run_cmd_background(cmd)
 
